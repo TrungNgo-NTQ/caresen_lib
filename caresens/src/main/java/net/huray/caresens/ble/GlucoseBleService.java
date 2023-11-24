@@ -204,10 +204,10 @@ public class GlucoseBleService extends Service {
 
 
                         //logic giong ios
-                        enableGlucoseContextNotification(gatt);
-                        /*enableGlucoseMeasurementNotification(gatt);
+                        //enableGlucoseContextNotification(gatt);
+                        enableGlucoseMeasurementNotification(gatt);
                         //enableRecordAccessControlPointNotification(gatt);
-                        enableRecordAccessControlPointIndication(gatt);*/
+                        //enableRecordAccessControlPointIndication(gatt);
                     }
                     else if (Const.BLE_SERVICE_DEVICE_INFO.equals(service.getUuid())) {    // Device Info Service // 180A
                         mDeviceSerialCharacteristic = service.getCharacteristic(Const.BLE_CHAR_DEVICE_INFO_SERIALNO);  //2A25
@@ -276,9 +276,10 @@ public class GlucoseBleService extends Service {
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             Log.d("LinhBD", "Descriptor: " + descriptor.getCharacteristic().getUuid().toString());
             if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_CONTEXT)){
-                enableGlucoseMeasurementNotification(gatt);
-            } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
+//                enableGlucoseMeasurementNotification(gatt);
                 enableRecordAccessControlPointIndication(gatt);
+            } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
+                enableGlucoseContextNotification(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_RACP)){
                 try {
                     Thread.sleep(200);
