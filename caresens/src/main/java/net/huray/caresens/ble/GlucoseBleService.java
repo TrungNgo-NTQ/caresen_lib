@@ -205,7 +205,11 @@ public class GlucoseBleService extends Service {
 
                         //logic giong ios
                         //enableGlucoseContextNotification(gatt);
-                        enableGlucoseMeasurementNotification(gatt);
+                        if (mGlucoseContextCharacteristic == null) {
+                            enableGlucoseMeasurementNotification(gatt);
+                        } else {
+                            enableGlucoseContextNotification(gatt);
+                        }             
                         //enableRecordAccessControlPointNotification(gatt);
                         //enableRecordAccessControlPointIndication(gatt);
                     }
