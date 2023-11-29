@@ -282,7 +282,7 @@ public class GlucoseBleService extends Service {
             if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_CONTEXT)){
                 enableGlucoseMeasurementNotification(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
-                enableGlucoseContextNotification(gatt);
+                enableRecordAccessControlPointIndication(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_RACP)){
                 try {
                     Thread.sleep(200);
