@@ -209,7 +209,7 @@ public class GlucoseBleService extends Service {
                             enableGlucoseMeasurementNotification(gatt);
                         } else {
                             enableGlucoseContextNotification(gatt);
-                        }             
+                        }
                         //enableRecordAccessControlPointNotification(gatt);
                         //enableRecordAccessControlPointIndication(gatt);
                     }
@@ -280,8 +280,7 @@ public class GlucoseBleService extends Service {
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             Log.d("LinhBD", "Descriptor: " + descriptor.getCharacteristic().getUuid().toString());
             if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_CONTEXT)){
-//                enableGlucoseMeasurementNotification(gatt);
-                enableRecordAccessControlPointIndication(gatt);
+                enableGlucoseMeasurementNotification(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
                 enableGlucoseContextNotification(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_RACP)){
