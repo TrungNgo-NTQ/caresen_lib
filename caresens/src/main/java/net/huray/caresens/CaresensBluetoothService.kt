@@ -72,7 +72,6 @@ open class CaresensBluetoothService : Service() {
                 Const.INTENT_BLE_TOTAL_COUNT -> {
                     Log.d(TAG,"INTENT_BLE_TOTAL_COUNT")
                     connectedDeviceInfo.totalCount = extraData?.toInt()
-                    bluetoothDataCallbacks?.onRead(DataReadState.DEVICE_INFO_READ_COMPLETE,"",connectedDeviceInfo,null)
                 }
                 Const.INTENT_BLE_CHAR_GLUCOSE_CONTEXT -> {
                     //##GET TOTAL STORED DATA COUNT
@@ -86,6 +85,7 @@ open class CaresensBluetoothService : Service() {
                 Const.INTENT_BLE_SERIAL_NUMBER -> {
                     Log.d(TAG,"INTENT_BLE_SERIAL_NUMBER")
                     connectedDeviceInfo.serialNumber = extraData
+                    bluetoothDataCallbacks?.onRead(DataReadState.DEVICE_INFO_READ_COMPLETE,"",connectedDeviceInfo,null)
                 }
                 Const.INTENT_BLE_BOND_NONE -> {
                     Log.d(TAG,"INTENT_BLE_BOND_NONE")

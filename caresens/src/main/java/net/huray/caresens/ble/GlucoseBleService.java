@@ -235,11 +235,6 @@ public class GlucoseBleService extends Service {
                     return;
                 }
 
-                if (mDeviceSoftwareRevisionCharacteristic != null) {
-                    // ###4. READ SW REV. of DEVICE
-                    readDeviceSoftwareRevision(gatt);
-                }
-
             } else {
                 broadcastUpdate(Const.INTENT_BLE_ERROR, getResources().getString(R.string.ERROR_DISCOVERY_SERVICE) + " (" + status + ")");
             }
@@ -248,30 +243,9 @@ public class GlucoseBleService extends Service {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                if (Const.BLE_CHAR_DEVICE_INFO_SOFTWARE_REVISION.equals(characteristic.getUuid())) { // 2A28
-                    mSoftwareVersions = characteristic.getStringValue(0).split("\\.");
-                    mSoftwareVersion1 = Integer.parseInt(mSoftwareVersions[0]);
-                    broadcastUpdate(Const.INTENT_BLE_SOFTWARE_VERSION, characteristic.getStringValue(0));
-                    if (mSoftwareVersion1 > SOFTWARE_REVISION_1) {  //If the version is greater than the supported version, disconnect
-                        broadcastUpdate(Const.INTENT_BLE_READ_SOFTWARE_REV, characteristic.getStringValue(0));
-                        gatt.disconnect();
-                        return;
-                    } else if (mSoftwareVersion1 >= SOFTWARE_REVISION_BASE && mSoftwareVersion1 == SOFTWARE_REVISION_1) {   //If the version is greater than or equal to base version AND is the same as the supported version
-                        if (mCustomTimeCharacteristic == null) {     //  'custom time characteristic' must be present. (OR disconnect)
-                            gatt.disconnect();
-                            return;
-                        }
-                    }
-
-                    if (mDeviceSerialCharacteristic != null) {
-                        // ###5. READ SERIAL NO of DEVICE
-                        readDeviceSerial(gatt);
-                    }
-                } else if (Const.BLE_CHAR_DEVICE_INFO_SERIALNO.equals(characteristic.getUuid())) { //2A25
+                if (Const.BLE_CHAR_DEVICE_INFO_SERIALNO.equals(characteristic.getUuid())) { //2A25
                     mSerialNum = characteristic.getStringValue(0);
                     broadcastUpdate(Const.INTENT_BLE_SERIAL_NUMBER, mSerialNum);
-                    // ###6. ENABLE RACP (DESCRIPTOR WRITE)
-                    enableRecordAccessControlPointIndication(gatt);
                 }
             }
         }
@@ -293,6 +267,15 @@ public class GlucoseBleService extends Service {
                     gatt.writeCharacteristic(mRACPCharacteristic);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
+                }
+            }
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            if (characteristic.getUuid() == mRACPCharacteristic.getUuid()) {
+                if (mDeviceSerialCharacteristic != null) {
+                    readDeviceSerial(gatt);
                 }
             }
         }
