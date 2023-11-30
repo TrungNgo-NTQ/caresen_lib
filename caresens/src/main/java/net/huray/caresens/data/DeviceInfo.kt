@@ -1,6 +1,6 @@
 package net.huray.caresens.data
 
-data class DeviceInfo {
+public class DeviceInfo {
     var name: String? = null
     var serialNumber: String? = null
     var version: String? = null
