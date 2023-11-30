@@ -5,4 +5,8 @@ public class DeviceInfo {
     public var serialNumber: String? = null
     var version: String? = null
     var totalCount: Int? = null
+    fun getDeviceSerialNumber(): String? {
+        return serialNumber
+    }
+
 }
