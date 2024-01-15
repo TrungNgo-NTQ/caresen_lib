@@ -350,6 +350,11 @@ open class CaresensBluetoothService : Service() {
         }
     }
 
+    public void unPairDevice() {
+       mGlucoseBleService?.unPairDevice()
+    }
+
+
     fun connect(device: BluetoothDevice?) {
         try {
             connectedDeviceInfo.name = device?.name
