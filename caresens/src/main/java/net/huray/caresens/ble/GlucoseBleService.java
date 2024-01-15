@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -742,8 +743,8 @@ public class GlucoseBleService extends Service {
     }
 
     public void unPairDevice() {
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        for (BluetoothDevice bt : pairedDevices) {
+//        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice bt : mBluetoothAdapter.getBondedDevices()) {
             Log.d("TrungNV", bt.getName());
             if (bt.getName().contains("CareSens") || bt.getName().contains("meter")) {
                 try {
