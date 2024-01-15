@@ -741,6 +741,22 @@ public class GlucoseBleService extends Service {
         }
     }
 
+    public void unPairDevice() {
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice bt : pairedDevices) {
+            Log.d("TrungNV", bt.getName());
+            if (bt.getName().contains("CareSens") || bt.getName().contains("meter")) {
+                try {
+                    Method m = bt.getClass().getMethod("removeBond", (Class[]) null);
+                    m.invoke(bt, (Object[]) null);
+                } catch (Exception e) {
+                    Log.d("TrungNV", e.getMessage());
+                }
+            }
+        }
+    }
+
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initCallbackLollipop() {
         if (mScanCallback != null) return;
