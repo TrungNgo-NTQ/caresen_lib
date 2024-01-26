@@ -247,6 +247,27 @@ public class GlucoseBleService extends Service {
                 if (Const.BLE_CHAR_DEVICE_INFO_SERIALNO.equals(characteristic.getUuid())) { //2A25
                     mSerialNum = characteristic.getStringValue(0);
                     broadcastUpdate(Const.INTENT_BLE_SERIAL_NUMBER, mSerialNum);
+                    try {
+                        Thread.sleep(200);
+                        byte[] data = new byte[2];
+                        data[0] = 0x01; // Report Stored records
+                        data[1] = 0x01; // All records
+                        mRACPCharacteristic.setValue(data);
+                        gatt.writeCharacteristic(mRACPCharacteristic);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } else {
+                try {
+                    Thread.sleep(200);
+                    byte[] data = new byte[2];
+                    data[0] = 0x01; // Report Stored records
+                    data[1] = 0x01; // All records
+                    mRACPCharacteristic.setValue(data);
+                    gatt.writeCharacteristic(mRACPCharacteristic);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -259,16 +280,7 @@ public class GlucoseBleService extends Service {
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
                 enableRecordAccessControlPointIndication(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_RACP)){
-                try {
-                    Thread.sleep(200);
-                    byte[] data = new byte[2];
-                    data[0] = 0x01; // Report Stored records
-                    data[1] = 0x01; // All records
-                    mRACPCharacteristic.setValue(data);
-                    gatt.writeCharacteristic(mRACPCharacteristic);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                readDeviceSerial(gatt);
             }
         }
 
