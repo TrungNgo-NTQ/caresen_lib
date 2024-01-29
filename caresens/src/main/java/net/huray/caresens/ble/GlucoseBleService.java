@@ -206,11 +206,11 @@ public class GlucoseBleService extends Service {
 
                         //logic giong ios
                         //enableGlucoseContextNotification(gatt);
-                        if (mGlucoseContextCharacteristic == null) {
-                            enableGlucoseMeasurementNotification(gatt);
-                        } else {
-                            enableGlucoseContextNotification(gatt);
-                        }
+//                        if (mGlucoseContextCharacteristic == null) {
+//                            enableGlucoseMeasurementNotification(gatt);
+//                        } else {
+//                            enableGlucoseContextNotification(gatt);
+//                        }
                         //enableRecordAccessControlPointNotification(gatt);
                         //enableRecordAccessControlPointIndication(gatt);
                     }
@@ -237,6 +237,12 @@ public class GlucoseBleService extends Service {
                     return;
                 }
 
+                if (mDeviceSoftwareRevisionCharacteristic != null) {
+                    // ###4. READ SW REV. of DEVICE
+                    readDeviceSoftwareRevision(gatt);
+                }
+
+
             } else {
                 broadcastUpdate(Const.INTENT_BLE_ERROR, getResources().getString(R.string.ERROR_DISCOVERY_SERVICE) + " (" + status + ")");
             }
@@ -245,32 +251,27 @@ public class GlucoseBleService extends Service {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                if (Const.BLE_CHAR_DEVICE_INFO_SOFTWARE_REVISION.equals(characteristic.getUuid())) {
+                    if (mDeviceSerialCharacteristic != null) {
+                        readDeviceSerial(gatt);
+                    }
+
+                }
                 if (Const.BLE_CHAR_DEVICE_INFO_SERIALNO.equals(characteristic.getUuid())) { //2A25
                     mSerialNum = characteristic.getStringValue(0);
                     broadcastUpdate(Const.INTENT_BLE_SERIAL_NUMBER, mSerialNum);
                     Log.d("LinhBD", "onCharacteristicRead mSerialNum: " + mSerialNum);
-                    try {
-                        Thread.sleep(200);
-                        Log.d("LinhBD", "writeCharacteristic mRACPCharacteristic: " + characteristic.getUuid());
-                        byte[] data = new byte[2];
-                        data[0] = 0x01; // Report Stored records
-                        data[1] = 0x01; // All records
-                        mRACPCharacteristic.setValue(data);
-                        gatt.writeCharacteristic(mRACPCharacteristic);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                    if (mGlucoseContextCharacteristic == null) {
+                        enableGlucoseMeasurementNotification(gatt);
+                    } else {
+                        enableGlucoseContextNotification(gatt);
                     }
                 }
             } else {
-                try {
-                    Thread.sleep(200);
-                    byte[] data = new byte[2];
-                    data[0] = 0x01; // Report Stored records
-                    data[1] = 0x01; // All records
-                    mRACPCharacteristic.setValue(data);
-                    gatt.writeCharacteristic(mRACPCharacteristic);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                if (mGlucoseContextCharacteristic == null) {
+                    enableGlucoseMeasurementNotification(gatt);
+                } else {
+                    enableGlucoseContextNotification(gatt);
                 }
             }
         }
@@ -283,17 +284,17 @@ public class GlucoseBleService extends Service {
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
                 enableRecordAccessControlPointIndication(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_RACP)){
-                readDeviceSerial(gatt);
-//                try {
-//                    Thread.sleep(200);
-//                    byte[] data = new byte[2];
-//                    data[0] = 0x01; // Report Stored records
-//                    data[1] = 0x01; // All records
-//                    mRACPCharacteristic.setValue(data);
-//                    gatt.writeCharacteristic(mRACPCharacteristic);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
+//                readDeviceSerial(gatt);
+                try {
+                    Thread.sleep(200);
+                    byte[] data = new byte[2];
+                    data[0] = 0x01; // Report Stored records
+                    data[1] = 0x01; // All records
+                    mRACPCharacteristic.setValue(data);
+                    gatt.writeCharacteristic(mRACPCharacteristic);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
