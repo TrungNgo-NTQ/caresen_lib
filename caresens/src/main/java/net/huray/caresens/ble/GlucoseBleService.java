@@ -304,11 +304,11 @@ public class GlucoseBleService extends Service {
             }
         }
 
-//        @Override
-//        public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
-//            super.onCharacteristicChanged(gatt, characteristic, value);
-//            Log.d("LinhBD", value.length + "");
-//        }
+        @Override
+        public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
+            super.onCharacteristicChanged(gatt, characteristic, value);
+            Log.d("LinhBD", value.length + "TrungNV");
+        }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
