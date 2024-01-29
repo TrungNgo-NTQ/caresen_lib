@@ -248,8 +248,10 @@ public class GlucoseBleService extends Service {
                 if (Const.BLE_CHAR_DEVICE_INFO_SERIALNO.equals(characteristic.getUuid())) { //2A25
                     mSerialNum = characteristic.getStringValue(0);
                     broadcastUpdate(Const.INTENT_BLE_SERIAL_NUMBER, mSerialNum);
+                    Log.d("LinhBD", "onCharacteristicRead mSerialNum: " + mSerialNum);
                     try {
                         Thread.sleep(200);
+                        Log.d("LinhBD", "writeCharacteristic mRACPCharacteristic: " + characteristic.getUuid());
                         byte[] data = new byte[2];
                         data[0] = 0x01; // Report Stored records
                         data[1] = 0x01; // All records
