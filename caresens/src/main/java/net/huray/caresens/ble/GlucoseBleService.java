@@ -206,18 +206,18 @@ public class GlucoseBleService extends Service {
 
                         //logic giong ios
                         //enableGlucoseContextNotification(gatt);
-//                        if (mGlucoseContextCharacteristic == null) {
-//                            enableGlucoseMeasurementNotification(gatt);
-//                        } else {
-//                            enableGlucoseContextNotification(gatt);
-//                        }
+                        if (mGlucoseContextCharacteristic == null) {
+                            enableGlucoseMeasurementNotification(gatt);
+                        } else {
+                            enableGlucoseContextNotification(gatt);
+                        }
                         //enableRecordAccessControlPointNotification(gatt);
                         //enableRecordAccessControlPointIndication(gatt);
                     }
                     else if (Const.BLE_SERVICE_DEVICE_INFO.equals(service.getUuid())) {    // Device Info Service // 180A
                         mDeviceSerialCharacteristic = service.getCharacteristic(Const.BLE_CHAR_DEVICE_INFO_SERIALNO);  //2A25
                         mDeviceSoftwareRevisionCharacteristic = service.getCharacteristic(Const.BLE_CHAR_DEVICE_INFO_SOFTWARE_REVISION);     //2A28
-                        readDeviceSerial(gatt);
+
                     }
                     // Time Synchronization
                     else if (Const.BLE_SERVICE_CUSTOM_TIME.equals(service.getUuid())) {    // Custome Time Service // FFF0
@@ -250,11 +250,11 @@ public class GlucoseBleService extends Service {
                     broadcastUpdate(Const.INTENT_BLE_SERIAL_NUMBER, mSerialNum);
                     try {
                         Thread.sleep(200);
-                        if (mGlucoseContextCharacteristic == null) {
-                            enableGlucoseMeasurementNotification(gatt);
-                        } else {
-                            enableGlucoseContextNotification(gatt);
-                        }
+                        byte[] data = new byte[2];
+                        data[0] = 0x01; // Report Stored records
+                        data[1] = 0x01; // All records
+                        mRACPCharacteristic.setValue(data);
+                        gatt.writeCharacteristic(mRACPCharacteristic);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -262,11 +262,11 @@ public class GlucoseBleService extends Service {
             } else {
                 try {
                     Thread.sleep(200);
-                    if (mGlucoseContextCharacteristic == null) {
-                        enableGlucoseMeasurementNotification(gatt);
-                    } else {
-                        enableGlucoseContextNotification(gatt);
-                    }
+                    byte[] data = new byte[2];
+                    data[0] = 0x01; // Report Stored records
+                    data[1] = 0x01; // All records
+                    mRACPCharacteristic.setValue(data);
+                    gatt.writeCharacteristic(mRACPCharacteristic);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -281,16 +281,17 @@ public class GlucoseBleService extends Service {
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
                 enableRecordAccessControlPointIndication(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_RACP)){
-                try {
-                    Thread.sleep(200);
-                    byte[] data = new byte[2];
-                    data[0] = 0x01; // Report Stored records
-                    data[1] = 0x01; // All records
-                    mRACPCharacteristic.setValue(data);
-                    gatt.writeCharacteristic(mRACPCharacteristic);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                readDeviceSerial(gatt);
+//                try {
+//                    Thread.sleep(200);
+//                    byte[] data = new byte[2];
+//                    data[0] = 0x01; // Report Stored records
+//                    data[1] = 0x01; // All records
+//                    mRACPCharacteristic.setValue(data);
+//                    gatt.writeCharacteristic(mRACPCharacteristic);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
             }
         }
 
