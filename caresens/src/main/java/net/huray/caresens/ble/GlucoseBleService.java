@@ -280,7 +280,13 @@ public class GlucoseBleService extends Service {
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_GLUCOSE_MEASUREMENT)){
                 enableRecordAccessControlPointIndication(gatt);
             } else if(descriptor.getCharacteristic().getUuid().equals(Const.BLE_CHAR_RACP)){
-                readDeviceSerial(gatt);
+                Thread.sleep(2000);
+                byte[] data = new byte[2];
+                data[0] = 0x01; // Report Stored records
+                data[1] = 0x01; // All records
+                mRACPCharacteristic.setValue(data);
+                gatt.writeCharacteristic(mRACPCharacteristic);
+//                readDeviceSerial(gatt);
             }
         }
 
