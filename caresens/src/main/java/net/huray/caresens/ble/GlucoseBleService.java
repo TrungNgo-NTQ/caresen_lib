@@ -248,7 +248,7 @@ public class GlucoseBleService extends Service {
                     mSerialNum = characteristic.getStringValue(0);
                     broadcastUpdate(Const.INTENT_BLE_SERIAL_NUMBER, mSerialNum);
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(2000);
                         byte[] data = new byte[2];
                         data[0] = 0x01; // Report Stored records
                         data[1] = 0x01; // All records
