@@ -89,11 +89,11 @@ open class CaresensBluetoothService : Service() {
                 }
                 Const.INTENT_BLE_BOND_NONE -> {
                     Log.d(TAG,"INTENT_BLE_BOND_NONE")
-                    bluetoothConnectionCallbacks?.onStateChanged(
-                        ConnectState.ERROR,
-                        "블루투스 연결에 실패했습니다. 블루투스 연결 재시도해주세요",
-                        null
-                    )
+//                    bluetoothConnectionCallbacks?.onStateChanged(
+//                        ConnectState.ERROR,
+//                        "블루투스 연결에 실패했습니다. 블루투스 연결 재시도해주세요",
+//                        null
+//                    )
                 }
                 Const.INTENT_BLE_DEVICE_CONNECTED -> {
                     Log.d(TAG,"INTENT_BLE_DEVICE_CONNECTED")
