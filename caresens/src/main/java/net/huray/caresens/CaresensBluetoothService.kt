@@ -350,6 +350,14 @@ open class CaresensBluetoothService : Service() {
         }
     }
 
+    fun onDestroy() {
+        mGlucoseBleService?.onDestroy()
+    }
+
+    fun onCreate() {
+        mGlucoseBleService?.onCreate()
+    }
+
     fun unPairDevice() {
        mGlucoseBleService?.unPairDevice()
     }
