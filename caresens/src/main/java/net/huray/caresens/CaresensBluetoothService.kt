@@ -350,11 +350,11 @@ open class CaresensBluetoothService : Service() {
         }
     }
 
-    fun onDestroy() {
+    fun onDestroyServices() {
         mGlucoseBleService?.onDestroyServices()
     }
 
-    fun onCreate() {
+    fun onCreateServices() {
         mGlucoseBleService?.onCreateServices()
     }
 
