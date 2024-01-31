@@ -629,48 +629,7 @@ public class GlucoseBleService extends Service {
         }
 
     }
-
-    public void onDestroyServices() {
-        try {
-            stopScan();
-            close();
-            unregisterReceiver(mBondingBroadcastReceiver);
-            unregisterReceiver(mBleServiceReceiver);
-            if (mPeriodicScanningScheduler != null) {
-                mPeriodicScanningScheduler.shutdownNow();
-                mPeriodicScanningScheduler = null;
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    public void onCreateServices() {
-        mHandler = new Handler();
-
-        // Register receiver to process Bluetooth Intents
-        registerReceiver(mBleServiceReceiver, makeBleServiceIntentFilter());
-
-        // Notification
-        /*mNotiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNoti = new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.mipmap.justble).setContentTitle("BLE(GL) Example").setOngoing(true);
-        mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        mNoti.setContentIntent(mPendingIntent);
-        mNotiManager.notify(1, mNoti.build());*/
-
-        //
-        boolean isBleAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) ? true : false;
-        if (isBleAvailable && Util.getInstance(getApplicationContext()).runningOnKitkatOrHigher()) { // 4.4 or later
-            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            mBluetoothAdapter = mBluetoothManager.getAdapter();
-            if (mBluetoothAdapter == null) {
-                Util.getInstance(getApplicationContext()).showToast(getString(R.string.ble_not_supported));
-            } else {
-                initScan();
-            }
-        } else {
-            Util.getInstance(getApplicationContext()).showToast("BLE off. Turn on ble mode");
-        }
-    }
+    
 
 
     @Override
