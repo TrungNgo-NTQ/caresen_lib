@@ -351,11 +351,11 @@ open class CaresensBluetoothService : Service() {
     }
 
     fun onDestroy() {
-        mGlucoseBleService?.onDestroy()
+        mGlucoseBleService?.onDestroyServices()
     }
 
     fun onCreate() {
-        mGlucoseBleService?.onCreate()
+        mGlucoseBleService?.onCreateServices()
     }
 
     fun unPairDevice() {
