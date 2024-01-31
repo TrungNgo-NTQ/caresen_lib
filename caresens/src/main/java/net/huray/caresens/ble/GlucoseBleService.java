@@ -630,6 +630,38 @@ public class GlucoseBleService extends Service {
 
     }
 
+    public void onDestroyServices() {
+        try {
+            stopScan();
+            close();
+            unregisterReceiver(mBondingBroadcastReceiver);
+            unregisterReceiver(mBleServiceReceiver);
+            if (mPeriodicScanningScheduler != null) {
+                mPeriodicScanningScheduler.shutdownNow();
+                mPeriodicScanningScheduler = null;
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void onCreateServices() {
+        mHandler = new Handler();
+        registerReceiver(mBleServiceReceiver, makeBleServiceIntentFilter());
+        boolean isBleAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) ? true : false;
+        if (isBleAvailable && Util.getInstance(getApplicationContext()).runningOnKitkatOrHigher()) { // 4.4 or later
+            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothAdapter = mBluetoothManager.getAdapter();
+            if (mBluetoothAdapter == null) {
+                Util.getInstance(getApplicationContext()).showToast(getString(R.string.ble_not_supported));
+            } else {
+                initScan();
+            }
+        } else {
+            Util.getInstance(getApplicationContext()).showToast("BLE off. Turn on ble mode");
+        }
+    }
+
+
     @Override
     public void onCreate() {
         super.onCreate();
