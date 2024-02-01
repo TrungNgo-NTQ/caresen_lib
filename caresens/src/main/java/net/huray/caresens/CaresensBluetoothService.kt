@@ -353,7 +353,8 @@ open class CaresensBluetoothService : Service() {
 
 
     fun unPairDevice() {
-       mGlucoseBleService?.unPairDevice()
+        extendedDevices.clear();
+        mGlucoseBleService?.unPairDevice()
     }
 
     fun searchDevice() {

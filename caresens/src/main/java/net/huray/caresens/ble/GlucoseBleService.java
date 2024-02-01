@@ -629,7 +629,7 @@ public class GlucoseBleService extends Service {
         }
 
     }
-    
+
 
 
     @Override
